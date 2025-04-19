@@ -20,10 +20,15 @@ namespace BookStore.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int? categoryId)
         {
-            var applicationDbContext = _context.Books.Include(b => b.Category);
-            return View(await applicationDbContext.ToListAsync());
+            ViewBag.Categories = _context.Categories.ToList();
+
+            var books = categoryId == null
+                ? _context.Books.ToList()
+                : _context.Books.Where(b => b.CategoryId == categoryId).ToList();
+
+            return View(books);
         }
 
         // GET: Books/Details/5
